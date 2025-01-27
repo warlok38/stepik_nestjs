@@ -12,7 +12,7 @@ import { TopPageModel } from './top-page.model';
 import { FindTopPageDto } from './dto/find-top-page.dto';
 
 @Controller('product')
-export class ProductController {
+export class TopPageController {
   @Post('create')
   async create(@Body() dto: Omit<TopPageModel, '_id'>) {}
 
