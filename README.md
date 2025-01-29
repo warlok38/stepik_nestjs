@@ -32,6 +32,20 @@
 $ npm install
 ```
 
+## .env
+
+You should create .env file and write next vars:
+
+```
+DATABASE_LOGIN=admin
+DATABASE_PASSWORD=admin
+DATABASE_HOST=localhost
+DATABASE_PORT=27017
+DATABASE_AUTHDATABASE=admin
+# uri string connection to db
+DATABASE_URL=mongodb://admin:admin@localhost:27017/admin
+```
+
 ## Compile and run the project
 
 ```bash
