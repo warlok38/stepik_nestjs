@@ -12,15 +12,15 @@ export const getMongoConfig = (
 
 const getMongoString = (configService: ConfigService) =>
   'mongodb://' +
-  configService.get('MONGO_LOGIN') +
+  configService.get('DATABASE_LOGIN') +
   ':' +
-  configService.get('MONGO_PASSWORD') +
+  configService.get('DATABASE_PASSWORD') +
   '@' +
-  configService.get('MONGO_HOST') +
+  configService.get('DATABASE_HOST') +
   ':' +
-  configService.get('MONGO_PORT') +
+  configService.get('DATABASE_PORT') +
   '/' +
-  configService.get('MONGO_AUTHDATABASE');
+  configService.get('DATABASE_AUTHDATABASE');
 
 const getMongoOptions = () => ({
   useNewUrlParser: true,
