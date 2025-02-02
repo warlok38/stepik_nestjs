@@ -68,3 +68,5 @@ export class TopPageModel {
 
 export const TopPageSchema = SchemaFactory.createForClass(TopPageModel);
 export type TopPageDocument = HydratedDocument<TopPageModel>;
+
+TopPageSchema.index({ '$**': 'text' });
