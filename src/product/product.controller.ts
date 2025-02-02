@@ -18,13 +18,20 @@ import { ProductService } from './product.service';
 import { PRODUCT_NOT_FOUND_ERROR } from './product.consts';
 import { IdValidationPipe } from 'src/pipes/id-validation.pipe';
 
-@Controller('product')
+@Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('create')
   async create(@Body() dto: CreateProductDto) {
     return this.productService.create(dto);
+  }
+
+  @UsePipes(new ValidationPipe())
+  @HttpCode(200)
+  @Post('find')
+  async find(@Body() dto: FindProductDto) {
+    return this.productService.findWithReviews(dto);
   }
 
   @Get(':id')
@@ -54,12 +61,5 @@ export class ProductController {
       throw new NotFoundException(PRODUCT_NOT_FOUND_ERROR);
     }
     return updatedProduct;
-  }
-
-  @UsePipes(new ValidationPipe())
-  @HttpCode(200)
-  @Post('find')
-  async find(@Body() dto: FindProductDto) {
-    return this.productService.findWithReviews(dto);
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ProductModel } from './product.model';
+import { ProductModel, ProductDocument } from './product.model';
 import { Model } from 'mongoose';
 import { CreateProductDto } from './dto/create-product.dto';
 import { FindProductDto } from './dto/find-product.dto';
@@ -10,7 +10,7 @@ import { ReviewModel } from 'src/review/review.model';
 export class ProductService {
   constructor(
     @InjectModel(ProductModel.name)
-    private readonly productModel: Model<ProductModel>,
+    private readonly productModel: Model<ProductDocument>,
   ) {}
 
   async create(dto: CreateProductDto) {
@@ -46,8 +46,11 @@ export class ProductService {
           $limit: dto.limit,
         },
         {
+          $addFields: { _id: { $toString: '$_id' } },
+        },
+        {
           $lookup: {
-            from: 'Review',
+            from: 'reviewmodels',
             localField: '_id',
             foreignField: 'productId',
             as: 'reviews',
@@ -57,11 +60,21 @@ export class ProductService {
           $addFields: {
             reviewCount: { $size: '$reviews' },
             reviewAvg: { $avg: '$reviews.rating' },
+            reviews: {
+              $function: {
+                body: `function (reviews) {
+                  reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                  return reviews;
+                }`,
+                args: ['$reviews'],
+                lang: 'js',
+              },
+            },
           },
         },
       ])
       .exec()) as unknown as (ProductModel & {
-      review: ReviewModel[];
+      reviews: ReviewModel[];
       reviewCount: number;
       reviewAvg: number;
     })[];
